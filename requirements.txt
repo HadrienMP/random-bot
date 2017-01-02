@@ -8,5 +8,5 @@ pytest-cov
 pytest-flask
 pytest-mock
 assertpy
-nose
+nose2
 nose-parameterized
