@@ -26,7 +26,7 @@ def test_should_call_the_mapped_function_for_a_mapped_command():
     assert_that(response).is_equal_to(expected_response)
 
 
-@patch("test.bot_test.command_function")
+@patch("test.test_bot.command_function")
 def test_should_call_the_mapped_function_for_a_mapped_command_with_the_parameter(command_function_mock):
     # GIVEN
     bot.command("command")(command_function_mock)
