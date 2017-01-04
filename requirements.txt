@@ -10,3 +10,4 @@ pytest-mock
 assertpy
 nose2
 nose-parameterized
+hypothesis

@@ -1,5 +1,10 @@
 import re
 
+PARAMETER_PATTERN = '.*'
+
+COMMAND_PATTERN = r'[^\s]+'
+
+
 class Bot:
     def __init__(self):
         self.commands = dict()
@@ -44,7 +49,7 @@ class Command:
     def __parse(json):
         if Command.__is_well_formed(json):
             message = json['item']['message']['message']
-            m = re.search(r'^/[^\s]+\s([\w\d][\w\d\-_]*)\s?(.*)$', message)
+            m = re.search(r'^/[^\s]+\s(' + COMMAND_PATTERN + ')\s?(' + PARAMETER_PATTERN + ')$', message)
             if m:
                 return m.group(1), m.group(2)
         
