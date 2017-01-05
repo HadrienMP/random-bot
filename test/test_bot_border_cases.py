@@ -1,5 +1,6 @@
 from ast import literal_eval
 from unittest import TestCase
+import pytest
 
 from assertpy import assert_that
 from nose_parameterized import parameterized
@@ -21,11 +22,12 @@ def test_should_return_a_static_error_message_for_an_unmapped_command():
     assert_that(response).is_equal_to("Oops, I don't know this command :-(")
 
 
-@parameterized([
+@pytest.mark.parametrize("message_str", [
     "{'broken': 'message_format'}",
     "{'item': 'still broken'}",
     "{'item': {'message': 'still broken'}}",
     "{'item': {'message': {'still': 'broken'}}}",
+    "{'item': {'message': {'message': 'still broken'}}}",
 ])
 def test_should_return_a_static_error_message_for_a_wrong_format_message(message_str):
     message = literal_eval(message_str)

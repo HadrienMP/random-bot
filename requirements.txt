@@ -3,11 +3,8 @@ requests
 
 # Tests
 pytest>=2.7
-mock
 pytest-cov
 pytest-flask
-pytest-mock
 assertpy
-nose2
 nose-parameterized
 hypothesis
