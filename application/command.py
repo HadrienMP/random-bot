@@ -1,43 +1,42 @@
-import re
+from application.message_parser import parse
 
-PARAMETER_PATTERN = '.*'
+class CommandFactory:
+    def __init__(self):
+        self.command_definitions = dict()
 
-COMMAND_PATTERN = r'[^\s]+'
+    def register(self, function, command_name, params):
+        self.command_definitions[command_name] = function
 
-class Command:
-    def __init__(self, json):
-        self.name, self.parameters = Command.__parse(json)
+    # TODO test if the command match the parameters given (name, number)
+    def create_for(self, json):
+        try:
+            command_name, parameters = parse(json)
+            function = self.command_definitions.get(command_name)
+            if function:
+                return Command(function, parameters)
+            else:
+                return StaticResponse("Oops, I don't know this command :-(")
+        except ValueError:
+            return StaticResponse("Oops, I don't understand what you are saying :'(")
 
-    @staticmethod
-    def __parse(json):
-        message = Command.__get_message(json)
-        m = re.search(r'^/[^\s]+\s(' + COMMAND_PATTERN + ')\s?(' + PARAMETER_PATTERN + ')$', message)
-        if m:
-            command_name = m.group(1)
-            parameter_string = m.group(2)
-            parameters = Command.__get_parameters(parameter_string)
-            return command_name, parameters
-            
-        raise ValueError("unkown message format")
-        
-    @staticmethod
-    def __get_message(json):
-        if Command.__is_well_formed(json):
-            return json['item']['message']['message']
-        raise ValueError("unkown message format")
 
-    @staticmethod
-    def __is_well_formed(json):
-        return "item" in json and "message" in json["item"] and "message" in json["item"]["message"]
-    
-    @staticmethod
-    def __get_parameters(parameter_string):
-        # TODO test command with unicode blanks or tabs instead of spaces
-        parameter_parts = parameter_string.split(" ")
-        parameters = dict()
-        while len(parameter_parts) >= 2:
-            parameter_name = parameter_parts.pop(0)[2:]
-            parameter_value = parameter_parts.pop(0)
-            parameters[parameter_name] = parameter_value
-            
-        return parameters
+class AbstractCommand:
+    def respond(self):
+        pass
+
+
+class StaticResponse(AbstractCommand):
+    def __init__(self, message):
+        self.message = message
+
+    def respond(self):
+        return self.message
+
+
+class Command(AbstractCommand):
+    def __init__(self, function, parameters):
+        self.function = function
+        self.parameters = parameters
+
+    def respond(self):
+        return self.function(**self.parameters)
