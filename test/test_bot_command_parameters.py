@@ -1,4 +1,4 @@
-from assertpy import assert_that
+from unittest.mock import Mock
 
 from application.bot import Bot
 from test.utils import build_message
@@ -8,29 +8,38 @@ bot = Bot()
 
 def test_should_pass_a_named_parameter_to_the_command_when_defined():
     # GIVEN
-    @bot.command("other-command", params=["parameter"])
-    def other_command(parameter):
-        return parameter
-
-    message = build_message("/r other-command --parameter one")
+    function_mock = Mock()
+    bot.command("mock-command", params=["parameter"])(function_mock)
+    message = build_message("/r mock-command --parameter one")
 
     # WHEN
-    response = bot.respond_to(message)
+    bot.respond_to(message)
 
     # THEN
-    assert_that(response).is_equal_to("one")
+    function_mock.assert_called_once_with(parameter="one")
 
 
 def test_should_pass_named_parameters_to_the_command_when_defined():
     # GIVEN
-    @bot.command("other-command", params=["named1", "named2"])
-    def other_command(named1, named2):
-        return named1 + " " + named2
-
-    message = build_message("/r other-command --named1 one --named2 two")
+    function_mock = Mock()
+    bot.command("mock-command", params=["named1", "named2"])(function_mock)
+    message = build_message("/r mock-command --named1 one --named2 two")
 
     # WHEN
-    response = bot.respond_to(message)
+    bot.respond_to(message)
 
     # THEN
-    assert_that(response).is_equal_to("one two")
+    function_mock.assert_called_once_with(named1="one", named2="two")
+
+
+def test_should_pass_named_parameters_to_the_command_even_when_separated_by_non_space_blanks():
+    # GIVEN
+    function_mock = Mock()
+    bot.command("mock-command", params=["named1", "named2"])(function_mock)
+    message = build_message("/r\t\u2002mock-command\u2002\t--named1\u2002one\t\u2002--named2\u2002two")
+
+    # WHEN
+    bot.respond_to(message)
+
+    # THEN
+    function_mock.assert_called_once_with(named1="one", named2="two")

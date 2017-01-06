@@ -19,7 +19,7 @@ def __get_message(json):
 
 
 def __parse(message):
-    m = re.search(r'^/[^\s]+\s(' + COMMAND_PATTERN + ')\s?(' + PARAMETER_PATTERN + ')$', message)
+    m = re.search(r'^/[^\s]+\s+(' + COMMAND_PATTERN + ')\s*(' + PARAMETER_PATTERN + ')?$', message)
     if m:
         command_name = m.group(1)
         parameter_string = m.group(2)
@@ -33,8 +33,7 @@ def __is_well_formed(json):
 
 
 def __get_parameters(parameter_string):
-    # TODO test command with unicode blanks or tabs instead of spaces
-    parameter_parts = parameter_string.split(" ")
+    parameter_parts = re.split(r'\s+', parameter_string)
     parameters = dict()
     while len(parameter_parts) >= 2:
         parameter_name = parameter_parts.pop(0)[2:]
