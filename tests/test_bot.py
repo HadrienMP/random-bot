@@ -6,7 +6,7 @@ from assertpy import assert_that
 from nose_parameterized import parameterized
 
 from application.bot import Bot
-from test.utils import build_message
+from tests.utils import build_message
 
 bot = Bot()
 
@@ -41,7 +41,7 @@ def test_should_return_a_static_error_message_for_a_wrong_format_message(message
 # TODO pass parameter with different names
 # TODO handle short parameter names like -w instead of --without
 # TODO handle presence parameters like --on to behave like on=true
-# TODO test impossible parameter names
+# TODO tests impossible parameter names
 # TODO automatic usage parameter
 # TODO custom usage definition
 # TODO handle mandatory and optional parameters

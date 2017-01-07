@@ -7,11 +7,11 @@ from hypothesis import given
 from hypothesis.strategies import text
 
 from application.bot import Bot
-from test.utils import build_message
+from tests.utils import build_message
 
 bot = Bot()
 
-expected_response = "Je suis la commande test "
+expected_response = "Je suis la commande tests "
 
 
 @bot.command("command")

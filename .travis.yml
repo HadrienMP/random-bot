@@ -3,13 +3,12 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-  - "3.7"
 # command to  install dependencies
 install:
   - pip install -r requirements.txt
   - pip install coveralls
 # command to run tests
 script:
-  - py.test tests/ --doctest-modules -v --cov application --cov-report term-missing
+  - py.tests tests/ --doctest-modules -v --cov application --cov-report term-missing
 after_success:
   - coveralls
