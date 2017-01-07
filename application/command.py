@@ -4,8 +4,8 @@ class CommandFactory:
     def __init__(self):
         self.command_definitions = dict()
 
-    def register(self, function, command_name, params):
-        self.command_definitions[command_name] = function
+    def register(self, function, command_name, parameters):
+        self.command_definitions[command_name] = CommandDefinition(function, parameters)
 
     # TODO test if the command match the parameters given (name, number)
     def create_for(self, json):
@@ -18,6 +18,23 @@ class CommandFactory:
                 return StaticResponse("Oops, I don't know this command :-(")
         except ValueError:
             return StaticResponse("Oops, I don't understand what you are saying :'(")
+
+
+class CommandDefinition:
+    def __init__(self, function, parameters):
+        self.function = function
+        self.parameters_mapping = CommandDefinition.__build_mapping(parameters)
+
+    @staticmethod
+    def __build_mapping(parameters) -> dict:
+        parameters_mapping = dict()
+        for parameter in parameters:
+            if "->" in parameter:
+                source_name, destination_name = parameter.split("->")
+                parameters_mapping[source_name] = destination_name
+            else:
+                parameters_mapping[parameter] = parameter
+        return parameters_mapping
 
 
 class AbstractCommand:
@@ -34,9 +51,17 @@ class StaticResponse(AbstractCommand):
 
 
 class Command(AbstractCommand):
-    def __init__(self, function, parameters):
-        self.function = function
-        self.parameters = parameters
+    def __init__(self, definition, given_parameters):
+        self.function = definition.function
+        self.parameters = Command.__map(given_parameters, definition.parameters_mapping)
+
+    @staticmethod
+    def __map(given_parameters, parameters_mapping):
+        parameters_to_send = dict()
+        for source_name, destination_name in parameters_mapping.items():
+            parameters_to_send[destination_name] = given_parameters[source_name]
+
+        return parameters_to_send
 
     def respond(self):
         return self.function(**self.parameters)
