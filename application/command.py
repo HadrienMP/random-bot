@@ -59,6 +59,9 @@ class Command(AbstractCommand):
     def __map(given_parameters, parameters_mapping):
         parameters_to_send = dict()
         for source_name, destination_name in parameters_mapping.items():
+            # TODO what should happen when a mandatory defined parameter is not given ?
+            # TODO what should happen when an optional defined parameter is not given ?
+            # TODO what should happend when undefined parameters are given ?
             parameters_to_send[destination_name] = given_parameters[source_name]
 
         return parameters_to_send
