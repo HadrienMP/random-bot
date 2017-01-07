@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 
 from application.bot import Bot
-from test.utils import build_message
+from tests.utils import build_message
 
 bot = Bot()
 
