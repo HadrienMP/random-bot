@@ -1,6 +1,9 @@
 from unittest.mock import Mock
 
+import pytest
+
 from application.bot import Bot
+from application.command import ParameterNameError
 from tests.utils import build_message
 
 bot = Bot()
@@ -56,4 +59,15 @@ def test_should_pass_parameter_with_different_names_in_definition_and_in_functio
 
     # THEN
     function.assert_called_once_with(one="one")
+
+
+@pytest.mark.parametrize("impossible_parameter_name", ["imp oss ible", "name->another-impossible_parameter"])
+def test_should_throw_an_exception_on_startup_when_an_impossible_parameter_name_is_defined(impossible_parameter_name):
+    """Parameter names are mapped directly to python names, so any impossible
+    python variable name is an invalid parameter"""
+    function = Mock()
+
+    with pytest.raises(ParameterNameError):
+        bot.command("command", params=["param", impossible_parameter_name])(function)
+
 

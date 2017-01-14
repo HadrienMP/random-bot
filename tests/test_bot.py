@@ -1,9 +1,7 @@
 from ast import literal_eval
-from unittest import TestCase
-import pytest
 
+import pytest
 from assertpy import assert_that
-from nose_parameterized import parameterized
 
 from application.bot import Bot
 from tests.utils import build_message
@@ -38,7 +36,6 @@ def test_should_return_a_static_error_message_for_a_wrong_format_message(message
     # THEN
     assert_that(response).is_equal_to("Oops, I don't understand what you are saying :'(")
 
-# TODO pass parameter with different names
 # TODO handle short parameter names like -w instead of --without
 # TODO handle presence parameters like --on to behave like on=true
 # TODO tests impossible parameter names

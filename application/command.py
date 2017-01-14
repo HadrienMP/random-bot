@@ -31,10 +31,17 @@ class CommandDefinition:
         for parameter in parameters:
             if "->" in parameter:
                 source_name, destination_name = parameter.split("->")
+                CommandDefinition.checkParameterName(destination_name)
                 parameters_mapping[source_name] = destination_name
             else:
+                CommandDefinition.checkParameterName(parameter)
                 parameters_mapping[parameter] = parameter
         return parameters_mapping
+
+    @staticmethod
+    def checkParameterName(destination_name):
+        if not str(destination_name).isidentifier():
+            raise ParameterNameError
 
 
 class AbstractCommand:
@@ -68,3 +75,7 @@ class Command(AbstractCommand):
 
     def respond(self):
         return self.function(**self.parameters)
+
+
+class ParameterNameError(Exception):
+    pass

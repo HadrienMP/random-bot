@@ -1,3 +1,11 @@
 .cache
 .hypothesis
 .coverage
+.idea
+Supprimerait .idea/inspectionProfiles/
+Supprimerait .idea/misc.xml
+Supprimerait .idea/modules.xml
+Supprimerait .idea/random-bot.iml
+Supprimerait .idea/workspace.xml
+Supprimerait application/__pycache__/
+Supprimerait tests/__pycache__/
