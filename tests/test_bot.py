@@ -46,3 +46,4 @@ def test_should_return_a_static_error_message_for_a_wrong_format_message(message
 
 # TODO handle short parameter names like -w instead of --without
 # TODO handle presence parameters like --on to behave like on=true
+

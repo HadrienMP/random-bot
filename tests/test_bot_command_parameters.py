@@ -1,12 +1,18 @@
 from unittest.mock import Mock
 
 import pytest
+from assertpy.assertpy import assert_that
 
 from application.bot import Bot
-from application.command import ParameterNameError
+from application.command_factory import ParameterNameError
 from tests.utils import build_message
 
 bot = Bot()
+
+
+# @bot.command("test", params=["--mandatory_parameter|-w"])
+# def test(mandatory_parameter, optional_parameter=None):
+#     pass
 
 
 def test_should_pass_a_named_parameter_to_the_command_when_defined():
@@ -71,3 +77,16 @@ def test_should_throw_an_exception_on_startup_when_an_impossible_parameter_name_
         bot.command("command", params=["param", impossible_parameter_name])(function)
 
 
+def test_should_ignore_missing_optional_parameters():
+    # GIVEN
+    @bot.command("command", params=["mandatory", "optional"])
+    def command(mandatory, optional=None):
+        return "called"
+
+    message = build_message("/r command --mandatory value")
+
+    # WHEN
+    result = bot.respond_to(message)
+
+    # THEN
+    assert_that(result).is_equal_to("called")

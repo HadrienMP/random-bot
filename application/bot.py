@@ -1,4 +1,4 @@
-from application.command import CommandFactory
+from application.command_factory import CommandFactory
 
 
 class Bot:
