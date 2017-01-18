@@ -37,13 +37,11 @@ def test_should_return_a_static_error_message_for_a_wrong_format_message(message
     assert_that(response).is_equal_to("Oops, I don't understand what you are saying :'(")
 
 
+# TODO handle short parameter names like -w instead of --without
+# TODO handle presence parameters like --on to behave like on=true
+
 # TODO automatic usage parameter
 # TODO custom usage definition
 
 # TODO what should happen when a mandatory defined parameter is not given ?
-# TODO what should happen when an optional defined parameter is not given ?
 # TODO what should happend when undefined parameters are given ?
-
-# TODO handle short parameter names like -w instead of --without
-# TODO handle presence parameters like --on to behave like on=true
-

@@ -10,11 +10,6 @@ from tests.utils import build_message
 bot = Bot()
 
 
-# @bot.command("test", params=["--mandatory_parameter|-w"])
-# def test(mandatory_parameter, optional_parameter=None):
-#     pass
-
-
 def test_should_pass_a_named_parameter_to_the_command_when_defined():
     # GIVEN
     function_mock = Mock()
@@ -90,3 +85,19 @@ def test_should_ignore_missing_optional_parameters():
 
     # THEN
     assert_that(result).is_equal_to("called")
+
+
+def test_should_detect_parameters_from_the_signature():
+    # GIVEN
+    @bot.command("mock-command")
+    def command(parameter, parameter_2, optional=None):
+        return parameter, parameter_2, optional
+
+    message = build_message("/r mock-command --parameter one --parameter_2 two --optional three")
+
+    # WHEN
+    answer = bot.respond_to(message)
+
+    # THEN
+    assert_that(answer).is_equal_to(("one", "two", "three"))
+

@@ -1,3 +1,5 @@
+import inspect
+
 from application.message_parser import parse
 from application.commands import *
 
@@ -23,7 +25,14 @@ class CommandFactory:
 class CommandDefinition:
     def __init__(self, function, parameters):
         self.function = function
+        parameters += CommandDefinition.__detect_function_parameters(function)
         self.parameters_mapping = CommandDefinition.__build_mapping(parameters)
+
+    @staticmethod
+    def __detect_function_parameters(function):
+        function_parameters = [param.name for param in inspect.signature(function).parameters.values()]
+        function_parameters = [param for param in function_parameters if param not in ['args', 'kwargs']]
+        return function_parameters
 
     @staticmethod
     def __build_mapping(parameters) -> dict:
