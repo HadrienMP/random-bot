@@ -1,4 +1,5 @@
 import inspect
+import re
 
 from application.message_parser import parse
 from application.commands import *
@@ -8,7 +9,14 @@ class CommandFactory:
         self.command_definitions = dict()
 
     def register(self, function, command_name, parameters):
-        self.command_definitions[command_name] = CommandDefinition(function, parameters)
+        if CommandFactory.__is_legal(command_name):
+            self.command_definitions[command_name] = CommandDefinition(function, parameters)
+        else:
+            raise CommandNameError
+
+    @staticmethod
+    def __is_legal(command_name):
+        return re.match(r'^[^\s]+$', command_name)
 
     def create_for(self, json):
         try:
@@ -54,4 +62,8 @@ class CommandDefinition:
 
 
 class ParameterNameError(Exception):
+    pass
+
+
+class CommandNameError(Exception):
     pass
