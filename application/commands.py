@@ -20,7 +20,8 @@ class Command(AbstractCommand):
     def __map(given_parameters, parameters_mapping):
         parameters_to_send = dict()
         for source_name, destination_name in parameters_mapping.items():
-            parameters_to_send[destination_name] = given_parameters.get(source_name)
+            if source_name in given_parameters:
+                parameters_to_send[destination_name] = given_parameters.get(source_name)
 
         return parameters_to_send
 

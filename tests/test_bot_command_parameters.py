@@ -101,3 +101,16 @@ def test_should_detect_parameters_from_the_signature():
     # THEN
     assert_that(answer).is_equal_to(("one", "two", "three"))
 
+
+def test_should_handle_short_named_parameters_with_a_single_dash():
+    # GIVEN
+    function_mock = Mock()
+    bot.command("mock-command", params=["p->parameter"])(function_mock)
+    message = build_message("/r mock-command -p one")
+
+    # WHEN
+    bot.respond_to(message)
+
+    # THEN
+    function_mock.assert_called_once_with(parameter="one")
+
